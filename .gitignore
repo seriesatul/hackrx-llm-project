@@ -1,0 +1,75 @@
+# Byte-compiled / optimized / C extensions
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib60/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Streamlit-specific files
+.streamlit/
+
+# Python Virtual Environment
+# This is the most important one! Never commit your virtual environment.
+venv/
+*.venv
+.venv
+
+# Database and Index files
+# Exclude the local vector store databases. They will be rebuilt from source.
+chroma_db/
+chroma_db_gemini/
+db/
+db_gemini/
+faiss_index/
+
+# Environment variables
+# CRITICAL: Never commit your API keys or other secrets.
+.env
+*.env
+.env.*
+
+# OS-generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# IDE-specific files (VSCode, PyCharm, etc.)
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files created by the application
+*.pdf
+# If you create temporary PDFs or other files, you can add them here.
+# For example, if your tempfile logic creates files like 'temp_upload.pdf':
+# temp_upload*.pdf
+
+# Log files
+*.log
+logs/

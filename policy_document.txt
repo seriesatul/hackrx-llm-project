@@ -1,0 +1,20 @@
+# policy_document.txt
+
+**Health Insurance Policy Document - PrimeCare Gold**
+
+**Clause 1: Introduction**
+This document outlines the terms and conditions for the PrimeCare Gold health insurance policy. It is a legal contract between the insurer and the policyholder.
+
+**Clause 4: Waiting Periods**
+4.1: A general waiting period of 30 days is applicable from the policy start date for all claims, except for accidental injuries.
+4.2: A specific waiting period of 24 months is applicable for a list of pre-defined surgeries and treatments. This includes but is not limited to: cataracts, hernia, and joint replacement surgery (including knee/hip replacement). No claims for these procedures will be admissible if they occur during this 24-month period from the policy inception date.
+4.3: Pre-existing diseases will be covered after a waiting period of 48 months.
+
+**Clause 7: Coverage Details**
+7.1: In-patient hospitalization expenses are covered, including room rent, nursing expenses, and surgeon's fees.
+7.2: The policy covers major surgeries such as Cardiac Surgery, Neurosurgery, Organ Transplants, and Joint Replacement Surgery. Coverage is subject to other policy terms, including waiting periods.
+7.3: This policy is available for individuals from 18 years to 65 years of age at the time of purchase. Claims for insured members outside this age bracket will not be processed unless the policy was purchased before the age of 65.
+
+**Clause 12: Network Hospitals**
+12.1: Cashless facility is available at our network of over 5,000 hospitals across India.
+12.2: For surgeries in non-network hospitals, the claim will be processed on a reimbursement basis. The location of the hospital (e.g., Pune, Mumbai, Delhi) does not affect the claim's validity, only the cashless/reimbursement procedure.

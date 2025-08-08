@@ -1,0 +1,12 @@
+# requirements.txt
+langchain
+langchain-google-genai  
+chromadb
+pypdf
+python-dotenv
+tiktoken
+langchain-openai
+langchain-community
+langchain-chroma
+pypdf
+streamlit
