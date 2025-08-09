@@ -7,6 +7,16 @@ import tempfile
 from dotenv import load_dotenv
 import asyncio
 
+load_dotenv()
+
+# Get the key from Streamlit secrets if deployed, otherwise from .env
+# This makes the app work seamlessly in both environments
+google_api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
+
+if not google_api_key:
+    st.error("Google API key not found. Please set it in your Streamlit secrets or a .env file.")
+    st.stop()
+
 # --- All imports are the same ---
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import JsonOutputParser
