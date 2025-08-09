@@ -60,10 +60,10 @@ def setup_conversational_rag_chain(_uploaded_file):
     os.remove(tmp_path)
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     chunks = text_splitter.split_documents(documents)
-    embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001",google_api_key=google_api_key)
     vectorstore = Chroma.from_documents(documents=chunks, embedding=embedding_model)
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
-    llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0.1)
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0.1,google_api_key=google_api_key)
     
     # Chain 1: History-Aware Retriever (This part is correct and remains the same)
     contextualize_q_system_prompt = """Given a chat history and the latest user question which might reference context in the chat history, formulate a standalone question which can be understood without the chat history. Do NOT answer the question, just reformulate it if needed and otherwise return it as is."""
