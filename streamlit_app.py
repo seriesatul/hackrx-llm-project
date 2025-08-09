@@ -1,11 +1,19 @@
 # streamlit_app.py (Definitive Final Version)
 
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
+
+
 import os
 import json
 import streamlit as st
 import tempfile
 from dotenv import load_dotenv
 import asyncio
+
+
 
 load_dotenv()
 
