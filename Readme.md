@@ -6,15 +6,21 @@ This project is an advanced AI-powered conversational agent designed to analyze,
 
 ### 🚀 Live Demo
 
-**[➡️ Click here to access the live application](https://your-streamlit-app-url.streamlit.app/)**
+https://hackrx-llm-project-eka3gmg9cydbfzcgfc3nlw.streamlit.app/
+### 🎥 Images
 
-<!-- 
-**ACTION REQUIRED:** Deploy your app to Streamlit Community Cloud and replace the URL above with your public app URL. 
--->
+<img width="1919" height="848" alt="image" src="https://github.com/user-attachments/assets/9a550777-1740-4263-818a-ea2c882618c8" />
+<img width="1919" height="868" alt="image" src="https://github.com/user-attachments/assets/38940f20-caf7-4637-b862-347c354db63a" />
+<img width="1919" height="868" alt="image" src="https://github.com/user-attachments/assets/62c59458-64d6-4588-b604-5a45e341baaf" />
+<img width="1919" height="867" alt="image" src="https://github.com/user-attachments/assets/009d2dac-00e5-41fe-ae49-f3ea3d9e2c7c" />
+<img width="1918" height="870" alt="image" src="https://github.com/user-attachments/assets/8f3f12b9-1c64-4356-88f0-c9c20daffc20" />
 
-### 🎥 Demo Video
 
-![Application Demo GIF](https://raw.githubusercontent.com/your-username/your-repo-name/main/assets/demo.gif)
+
+
+
+
+
 
 <!-- 
 **ACTION REQUIRED:** Record a short screen capture of your app in action (uploading a PDF, asking a few follow-up questions). 
