@@ -10,4 +10,4 @@ langchain-community
 langchain-chroma
 pypdf
 streamlit
-pysqlite3-binary  
+pysqlite3-binary; sys_platform == "linux"

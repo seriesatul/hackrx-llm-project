@@ -73,3 +73,5 @@ Desktop.ini
 # Log files
 *.log
 logs/
+
+.streamlit/

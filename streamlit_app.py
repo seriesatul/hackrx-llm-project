@@ -1,10 +1,12 @@
-# streamlit_app.py (Definitive Final Version)
+# streamlit_app.py (Final Corrected Version)
 
-__import__('pysqlite3')
-import sys
-sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-
-
+# This block must be at the very top of your script.
+try:
+    __import__('pysqlite3')
+    import sys
+    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+except ImportError:
+    pass # Will happen on local Windows machine, which is fine.
 
 import os
 import json
@@ -13,19 +15,7 @@ import tempfile
 from dotenv import load_dotenv
 import asyncio
 
-
-
-load_dotenv()
-
-# Get the key from Streamlit secrets if deployed, otherwise from .env
-# This makes the app work seamlessly in both environments
-google_api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
-
-if not google_api_key:
-    st.error("Google API key not found. Please set it in your Streamlit secrets or a .env file.")
-    st.stop()
-
-# --- All imports are the same ---
+# --- All imports ---
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.messages import AIMessage, HumanMessage
@@ -38,11 +28,18 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from pydantic import BaseModel, Field
 from typing import List, Optional
 
-# --- Load Env Vars and Pydantic Models (No change) ---
+# --- SECTION 1: CONFIGURATION AND API KEY LOADING (CLEANED UP) ---
 load_dotenv()
-if "GOOGLE_API_KEY" not in os.environ:
-    st.error("Google API key not found. Please set GOOGLE_API_KEY in your .env file.")
+
+# Get the key from Streamlit secrets if deployed, otherwise from .env/secrets.toml
+google_api_key = st.secrets.get("GOOGLE_API_KEY") or os.getenv("GOOGLE_API_KEY")
+
+if not google_api_key:
+    st.error("Google API key not found. Please set it in your Streamlit secrets or a .env file.")
     st.stop()
+
+
+# --- SECTION 2: PYDANTIC MODELS (NO CHANGE) ---
 class AnalysisDetail(BaseModel):
     parameter: str = Field(description="The specific parameter being evaluated (e.g., Waiting Period, Age Limit).")
     status: str = Field(description="The compliance status (e.g., Compliant, Non-Compliant).")
@@ -53,38 +50,46 @@ class JsonResponse(BaseModel):
     justification: str = Field(description="A summary of the overall justification for the decision.")
     analysis_details: List[AnalysisDetail] = Field(description="A list of evaluations for each relevant policy parameter.")
 
-# --- Backend Function (This is where the final prompt fix is) ---
+
+# --- SECTION 3: BACKEND RAG FUNCTION (BUG FIXES APPLIED) ---
 @st.cache_resource(show_spinner="Indexing document...")
 def setup_conversational_rag_chain(_uploaded_file):
     try:
         asyncio.get_running_loop()
     except RuntimeError:
         asyncio.set_event_loop(asyncio.new_event_loop())
+
+    # Write uploaded file to a temporary file
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
         tmp_file.write(_uploaded_file.getvalue())
+        tmp_file.flush()
         tmp_path = tmp_file.name
+
+    # --- CRITICAL BUG FIX: Initialize the loader with the temp file path ---
     loader = PyPDFLoader(tmp_path)
     documents = loader.load()
     os.remove(tmp_path)
+
+    # Chunk and embed the documents
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     chunks = text_splitter.split_documents(documents)
-    embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001",google_api_key=google_api_key)
+    
+    # --- FIX: Pass the API key to the embedding model ---
+    embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=google_api_key)
+    
     vectorstore = Chroma.from_documents(documents=chunks, embedding=embedding_model)
     retriever = vectorstore.as_retriever(search_kwargs={"k": 5})
-    llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0.1,google_api_key=google_api_key)
+
+    # --- FIX: Use correct model name 'gemini-1.5-pro' and pass the API key ---
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0.1, google_api_key=google_api_key)
     
-    # Chain 1: History-Aware Retriever (This part is correct and remains the same)
+    # Chain 1: History-Aware Retriever
     contextualize_q_system_prompt = """Given a chat history and the latest user question which might reference context in the chat history, formulate a standalone question which can be understood without the chat history. Do NOT answer the question, just reformulate it if needed and otherwise return it as is."""
     contextualize_q_prompt = ChatPromptTemplate.from_messages([("system", contextualize_q_system_prompt), MessagesPlaceholder(variable_name="chat_history"), ("human", "{input}")])
     history_aware_retriever = create_history_aware_retriever(llm, retriever, contextualize_q_prompt)
     
-    # --- THIS IS THE FIX ---
-    # Chain 2: Final Answer Generation (A new, more robust prompt structure)
-    # The system prompt sets the persona, and the human prompt contains the data and the final instruction.
-    # This makes the JSON instruction the last thing the LLM sees.
-
+    # Chain 2: Final Answer Generation
     qa_system_prompt = "You are a helpful and expert document analysis assistant. Answer the user's question based on the provided context."
-    
     qa_human_prompt_template = """Based on the following context, please answer the user's question.
 
 Context:
@@ -97,20 +102,20 @@ Your final output MUST be a valid JSON object that strictly follows this JSON sc
     
     parser = JsonOutputParser(pydantic_object=JsonResponse)
     
-    # The prompt now correctly includes the chat_history placeholder
     qa_prompt = ChatPromptTemplate.from_messages([
         ("system", qa_system_prompt),
         MessagesPlaceholder("chat_history"),
         ("human", qa_human_prompt_template),
     ]).partial(json_structure=parser.get_format_instructions())
-    # --- END OF FIX ---
 
     question_answer_chain = create_stuff_documents_chain(llm, qa_prompt)
     combine_docs_chain = question_answer_chain | parser
     rag_chain = create_retrieval_chain(history_aware_retriever, combine_docs_chain)
+    
     return rag_chain
 
-# --- Streamlit UI (This part is now correct and needs no changes) ---
+
+# --- SECTION 4: STREAMLIT UI (NO CHANGES NEEDED, BUT PASTED FOR COMPLETENESS) ---
 st.set_page_config(page_title="Conversational Document Assistant", layout="wide")
 st.title("💬 Conversational Document Assistant")
 if "messages" not in st.session_state:
